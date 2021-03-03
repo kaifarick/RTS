@@ -5,14 +5,18 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
     [SerializeField]
-    int moveSpeed;
-
-    [HideInInspector]
-    public Transform target;
+    int friendMoveSpeed;
+    [SerializeField]
+    int hammerCost;
+    [SerializeField]
+    int crossbowCost;
+    [SerializeField]
+    int callWarriors;
 
     [SerializeField]
     private GameObject dot;
     private GameObject unit;
+    private Transform target;
 
     void Start()
     {
@@ -27,14 +31,13 @@ public class GameManager : Singleton<GameManager>
     }
 
     IEnumerator SpawnEnemy()
-    {
-        int pool = 10;
+    { 
         int healthUp = 5;
         int damageUp = 5;
 
         while (true)
         {
-            for (int i = 0; i < pool; i++)
+            for (int i = 0; i < callWarriors; i++)
             {
                 GameObject Enemy = PoolManager.Instance.GetPooledObject("Hammer");
                 Enemy.GetComponent<HammerEnemy>().Health = 100;
@@ -44,11 +47,11 @@ public class GameManager : Singleton<GameManager>
                 Enemy.GetComponent<HammerEnemy>().Damage += damageUp;
 
             }
-            pool += 2;
+            callWarriors += 2;
             healthUp += 5;
             damageUp += 5;
             UiManager.Instance.AddMoney(100);
-            yield return new WaitForSeconds(60f);
+            yield return new WaitForSeconds(10f);
         }
     }
 
@@ -67,28 +70,38 @@ public class GameManager : Singleton<GameManager>
 
     void SelectTarget()
     {
-        if (target) Destroy(target.gameObject);
+        if (target)
+        {
+            Destroy(target.gameObject);
+        }
         RaycastHit hit;
 
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
         {
             HammerFriend warrior = hit.collider.GetComponent<HammerFriend>();
-            barrack barrack = hit.collider.GetComponent<barrack>();
+            WarriorBuilder barrack = hit.collider.GetComponent<WarriorBuilder>();
 
             if (warrior)
             {
                 unit = warrior.gameObject;
+
+                UiManager.Instance.UnitHealth = unit.GetComponent<HammerFriend>().Health;
+                UiManager.Instance.UnitDamage = unit.GetComponent<HammerFriend>().Damage;
+
                 UiManager.Instance.UnitUi.SetActive(true);
-                UiManager.Instance.HealthCount = unit.GetComponent<HammerFriend>().Health;
-                UiManager.Instance.DamagePower = unit.GetComponent<HammerFriend>().Damage;
                 UiManager.Instance.UnitUiRefresh();
             }
-            if (barrack)
+            else if (barrack)
             {
-                GameObject friend = PoolManager.Instance.GetPooledObject("Player");
-                friend.gameObject.transform.position = new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5));
-                friend.SetActive(true);
-                UiManager.Instance.UnitUi.SetActive(false);
+                UiManager.Instance.BuyWarrior(hammerCost);
+
+                if (UiManager.Instance.LeftMoney >= 0)
+                {
+                    GameObject friend = PoolManager.Instance.GetPooledObject("Player");
+                    friend.gameObject.transform.position = new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5));
+                    friend.SetActive(true);
+                    UiManager.Instance.UnitUi.SetActive(false);
+                }
             }
             else
             {
@@ -101,7 +114,7 @@ public class GameManager : Singleton<GameManager>
     private void Move()
     {
         if (unit == null) return;
-        unit.gameObject.transform.position = Vector3.MoveTowards(unit.gameObject.transform.position, target.position, moveSpeed * Time.deltaTime);
+        unit.gameObject.transform.position = Vector3.MoveTowards(unit.gameObject.transform.position, target.position, friendMoveSpeed * Time.deltaTime);
         unit.gameObject.transform.LookAt(target);
     }
 

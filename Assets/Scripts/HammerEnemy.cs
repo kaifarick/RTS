@@ -6,11 +6,6 @@ public class HammerEnemy : Units
 {
     public Vector3 direction;
 
-    private void Start()
-    {
-
-    }
-
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.GetComponent<HammerFriend>())

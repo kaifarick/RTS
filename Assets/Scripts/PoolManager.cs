@@ -6,7 +6,7 @@ using UnityEngine;
 public  class ObjectPoolItem
 {
 
-    public int poolLenght;
+    public int poolLenght = 10;
     public bool shouldExpand = true;
 
     public GameObject objectToPool;

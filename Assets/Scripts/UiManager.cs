@@ -9,38 +9,48 @@ public class UiManager : Singleton<UiManager>
     public Text CastleHealth;
 
     public GameObject UnitUi;
-
     public Castle CastleObj;
 
-    public int HealthCount;
-    public int DamagePower;
-
-
-    public int MoneyStart = 200;
+    public int UnitHealth;
+    public int UnitDamage;
+    public int MoneyCount;
+    public int LeftMoney;
     void Start()
     {
-        MoneyStart -= 100;
-        UnitUiRefresh();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        MoneyCount -= 100;
+        UiRefresh();
     }
 
     public void AddMoney(int number)
     {
-        MoneyStart += number;
-        Money.text = "Money" + MoneyStart;
+        MoneyCount += number;
+        Money.text = "Money" + MoneyCount.ToString();
 
     }
 
     public void UnitUiRefresh()
     {
-        CastleHealth.text = "Castle" + CastleObj.health;
-        Money.text = "Money" + MoneyStart;
-        Damage.text = "Damage "+DamagePower.ToString();
-        Health.text = "Health "+HealthCount.ToString();
+        Damage.text = "Damage " + UnitDamage.ToString();
+        Health.text = "Health " + UnitHealth.ToString();
+    }
+
+    public void UiRefresh()
+    {
+        CastleHealth.text = "Castle" + CastleObj.health.ToString();
+        Money.text = "Money" + MoneyCount.ToString();
+        Damage.text = "Damage " + UnitDamage.ToString();
+        Health.text = "Health " + UnitHealth.ToString();
+    }
+
+    public void BuyWarrior(int number)
+    {
+        LeftMoney = MoneyCount - number;
+        if (LeftMoney >= 0)
+        {
+            MoneyCount -= number;
+            Money.text = "Money" + MoneyCount.ToString();
+        }
+        else return;
+
     }
 }

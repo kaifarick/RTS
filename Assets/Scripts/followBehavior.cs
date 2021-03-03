@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,6 +20,7 @@ public class followBehavior : StateMachineBehaviour
     {
        castle = GameObject.Find("MainCastle").transform;
        mask = LayerMask.GetMask("Player");
+  
     }
 
 
@@ -25,6 +28,7 @@ public class followBehavior : StateMachineBehaviour
     {
         var cols = Physics.OverlapSphere(animator.gameObject.transform.position, range, mask.value);
         float dist = Mathf.Infinity;
+        Debug.Log(Mathf.Infinity);
 
         try
         {
@@ -40,6 +44,8 @@ public class followBehavior : StateMachineBehaviour
                 }
             }
             playerPos = currentCollider.gameObject.transform;
+
+            
             animator.transform.position = Vector3.MoveTowards(animator.transform.position, playerPos.position, Speed * Time.deltaTime);
         }        
         catch
