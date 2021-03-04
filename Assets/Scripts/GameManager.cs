@@ -12,6 +12,10 @@ public class GameManager : Singleton<GameManager>
     int crossbowCost;
     [SerializeField]
     int callWarriors;
+    [SerializeField]
+    int moneyFromWave;
+    [SerializeField]
+    int timeSpawn;
 
     [SerializeField]
     private GameObject dot;
@@ -47,11 +51,22 @@ public class GameManager : Singleton<GameManager>
                 Enemy.GetComponent<HammerEnemy>().Damage += damageUp;
 
             }
+
+            for (int i = 0; i < callWarriors; i++)
+            {
+                GameObject Enemy = PoolManager.Instance.GetPooledObject("Crossbow");
+                Enemy.GetComponent<CrossbowEnemy>().Health = 100;
+                Enemy.GetComponent<CrossbowEnemy>().Damage = 25;
+                Enemy.SetActive(true);
+                Enemy.GetComponent<CrossbowEnemy>().Health += healthUp;
+                Enemy.GetComponent<CrossbowEnemy>().Damage += damageUp;
+
+            }
             callWarriors += 2;
             healthUp += 5;
             damageUp += 5;
-            UiManager.Instance.AddMoney(100);
-            yield return new WaitForSeconds(10f);
+            UiManager.Instance.AddMoney(moneyFromWave);
+            yield return new WaitForSeconds(timeSpawn);
         }
     }
 
@@ -79,7 +94,9 @@ public class GameManager : Singleton<GameManager>
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
         {
             HammerFriend warrior = hit.collider.GetComponent<HammerFriend>();
-            WarriorBuilder barrack = hit.collider.GetComponent<WarriorBuilder>();
+            CrossbowFriendly crossbowFriendly = hit.collider.GetComponent<CrossbowFriendly>();
+            WarriorBuilder HammerBarrack = hit.collider.GetComponent<WarriorBuilder>();
+            CrossbowBuilder CrossbowBarrack = hit.collider.GetComponent<CrossbowBuilder>();
 
             if (warrior)
             {
@@ -91,13 +108,44 @@ public class GameManager : Singleton<GameManager>
                 UiManager.Instance.UnitUi.SetActive(true);
                 UiManager.Instance.UnitUiRefresh();
             }
-            else if (barrack)
+
+            else if (crossbowFriendly)
+            {
+                unit = crossbowFriendly.gameObject;
+                try
+                {
+                    UiManager.Instance.UnitHealth = unit.GetComponent<HammerFriend>().Health;
+                    UiManager.Instance.UnitDamage = unit.GetComponent<HammerFriend>().Damage;
+                }
+                catch
+                {
+                    UiManager.Instance.UnitHealth = unit.GetComponent<CrossbowFriendly>().Health;
+                    UiManager.Instance.UnitDamage = unit.GetComponent<CrossbowFriendly>().Damage;
+                }
+
+                UiManager.Instance.UnitUi.SetActive(true);
+                UiManager.Instance.UnitUiRefresh();
+            }
+            else if (HammerBarrack)
             {
                 UiManager.Instance.BuyWarrior(hammerCost);
 
                 if (UiManager.Instance.LeftMoney >= 0)
                 {
                     GameObject friend = PoolManager.Instance.GetPooledObject("Player");
+                    friend.gameObject.transform.position = new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5));
+                    friend.SetActive(true);
+                    UiManager.Instance.UnitUi.SetActive(false);
+                }
+            }
+
+            else if (CrossbowBarrack)
+            {
+                UiManager.Instance.BuyWarrior(crossbowCost);
+
+                if (UiManager.Instance.LeftMoney >= 0)
+                {
+                    GameObject friend = PoolManager.Instance.GetPooledObject("CrossbowFriendly");
                     friend.gameObject.transform.position = new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5));
                     friend.SetActive(true);
                     UiManager.Instance.UnitUi.SetActive(false);

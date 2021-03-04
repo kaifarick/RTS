@@ -1,8 +1,4 @@
-﻿
-
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class followBehavior : StateMachineBehaviour
 {
@@ -10,7 +6,10 @@ public class followBehavior : StateMachineBehaviour
     private Transform playerPos;
     private Transform castle;
 
+    HammerEnemy hammer;
+
     int range = 100;
+    float timeBetweenAtack;
 
     LayerMask mask;
 
@@ -20,7 +19,7 @@ public class followBehavior : StateMachineBehaviour
     {
        castle = GameObject.Find("MainCastle").transform;
        mask = LayerMask.GetMask("Player");
-  
+       hammer = animator.gameObject.GetComponent<HammerEnemy>();
     }
 
 
@@ -28,7 +27,6 @@ public class followBehavior : StateMachineBehaviour
     {
         var cols = Physics.OverlapSphere(animator.gameObject.transform.position, range, mask.value);
         float dist = Mathf.Infinity;
-        Debug.Log(Mathf.Infinity);
 
         try
         {
@@ -43,14 +41,31 @@ public class followBehavior : StateMachineBehaviour
                     dist = currentDist;
                 }
             }
+
             playerPos = currentCollider.gameObject.transform;
 
-            
-            animator.transform.position = Vector3.MoveTowards(animator.transform.position, playerPos.position, Speed * Time.deltaTime);
-        }        
+            if (dist > 1.5f)
+            {
+                animator.transform.position = Vector3.MoveTowards(animator.transform.position, playerPos.position, Speed * Time.deltaTime);
+            }
+            else
+            {
+                if (timeBetweenAtack <= 0)
+                {
+                    HammerFriend units = currentCollider.gameObject.GetComponent<HammerFriend>();
+                    units.Health -= hammer.Damage;
+                    timeBetweenAtack = 2f;
+                }
+                else timeBetweenAtack -= Time.deltaTime;
+            }
+        }
         catch
         {
-            animator.transform.position = Vector3.MoveTowards(animator.transform.position, castle.position, Speed * Time.deltaTime); ; ;
+            float currentDist = Vector3.Distance(animator.gameObject.transform.position, castle.transform.position);
+            if (currentDist > 3.5f)
+            {
+                animator.transform.position = Vector3.MoveTowards(animator.transform.position, castle.position, Speed * Time.deltaTime); ;
+            }
         }       
     }
 

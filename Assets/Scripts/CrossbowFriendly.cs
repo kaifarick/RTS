@@ -2,24 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HammerFriend : Units
+public class CrossbowFriendly : Units
 
 {
     private Transform playerPos;
     private Transform castle;
 
-
-    HammerEnemy hammer;
+    CrossbowEnemy crossbowEnemy;
 
     int range = 100;
     float timeBetweenAtack;
 
     LayerMask mask;
+
+    [SerializeField]
+    private float Speed;
     void Start()
     {
         castle = GameObject.Find("MainCastle").transform;
         mask = LayerMask.GetMask("Enemy");
-        hammer = GetComponent<HammerEnemy>();
+        crossbowEnemy = GetComponent<CrossbowEnemy>();
     }
 
     private void OnEnable()
@@ -27,6 +29,7 @@ public class HammerFriend : Units
         Health = 100 + UiManager.Instance.UpWarrior;
         Damage = 100 + UiManager.Instance.UpWarrior;
     }
+
 
     void Update()
     {
@@ -49,8 +52,9 @@ public class HammerFriend : Units
 
             playerPos = currentCollider.gameObject.transform;
 
-            if (dist < 1.6f)
+            if (dist < 10f)
             {
+
                 if (timeBetweenAtack <= 0)
                 {
                     try
@@ -60,14 +64,13 @@ public class HammerFriend : Units
                     }
                     catch
                     {
-                        CrossbowEnemy crossbowEnemy = currentCollider.gameObject.GetComponent<CrossbowEnemy>();
-                        crossbowEnemy.GetDamage(Damage);
+                        CrossbowEnemy crossbow = currentCollider.gameObject.GetComponent<CrossbowEnemy>();
+                        crossbow.GetDamage(Damage);
                     }
                     timeBetweenAtack = 2f;
                 }
                 else timeBetweenAtack -= Time.deltaTime;
             }
-
         }
         catch
         {
@@ -75,3 +78,4 @@ public class HammerFriend : Units
         }
     }
 }
+

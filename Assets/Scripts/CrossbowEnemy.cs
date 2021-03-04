@@ -2,12 +2,13 @@
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
-public class HammerEnemy : Units
+public class CrossbowEnemy : Units
 {
     private Transform playerPos;
     private Transform castle;
 
-    HammerEnemy hammer;
+    CrossbowEnemy crossbowEnemy;
+    Castle castle1;
 
     int range = 100;
     float timeBetweenAtack;
@@ -18,9 +19,10 @@ public class HammerEnemy : Units
     private float Speed;
     void Start()
     {
+        castle1 = FindObjectOfType<Castle>();
         castle = GameObject.Find("MainCastle").transform;
         mask = LayerMask.GetMask("Player");
-        hammer = GetComponent<HammerEnemy>();
+        crossbowEnemy = GetComponent<CrossbowEnemy>();
     }
 
 
@@ -45,7 +47,7 @@ public class HammerEnemy : Units
 
             playerPos = currentCollider.gameObject.transform;
 
-            if (dist > 1.6f)
+            if (dist > 10f)
             {
                 transform.position = Vector3.MoveTowards(transform.position, playerPos.position, Speed * Time.deltaTime);
             }
@@ -57,11 +59,13 @@ public class HammerEnemy : Units
                     {
                         HammerFriend units = currentCollider.gameObject.GetComponent<HammerFriend>();
                         units.GetDamage(Damage);
+                        UiManager.Instance.UnitUiRefresh();
                     }
                     catch
                     {
                         CrossbowFriendly crossbow = currentCollider.gameObject.GetComponent<CrossbowFriendly>();
                         crossbow.GetDamage(Damage);
+                        UiManager.Instance.UnitUiRefresh();
                     }
                     timeBetweenAtack = 2f;
                 }
@@ -71,39 +75,21 @@ public class HammerEnemy : Units
         catch
         {
             float currentDist = Vector3.Distance(gameObject.transform.position, castle.transform.position);
-            if (currentDist > 3.5f)
+            if (currentDist > 10f)
             {
-                transform.position = Vector3.MoveTowards(transform.position, castle.position, Speed * Time.deltaTime); ;
+                transform.position = Vector3.MoveTowards(transform.position, castle.position, Speed * Time.deltaTime);
+            }
+
+            else
+            {
+                if (timeBetweenAtack <= 0)
+                {
+                    castle1.health -= Damage;
+                    castle1.RestartGames();
+                    timeBetweenAtack = 2f;
+                }
+                else timeBetweenAtack -= Time.deltaTime;
             }
         }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.GetComponent<Castle>())
-        {
-            StartCoroutine(CastleDamage());
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.GetComponent<Castle>())
-        {
-            StopAllCoroutines();
-        }
-    }
-    private IEnumerator CastleDamage()
-    {
-        Castle castle = FindObjectOfType<Castle>();
-        while (true)
-        {
-            castle.health -= Damage;
-            UiManager.Instance.CastleHealthTXT.text = "Castle" + castle.health.ToString();
-            castle.RestartGames();
-            yield return new WaitForSeconds(2);
-        }
-    }
+    }   
 }
-
-

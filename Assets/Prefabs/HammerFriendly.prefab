@@ -1813,7 +1813,7 @@ GameObject:
   - component: {fileID: 4812042948221508303}
   - component: {fileID: -5413960196887761274}
   m_Layer: 8
-  m_Name: Hammer Friend
+  m_Name: HammerFriendly
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1842,7 +1842,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4812042948221508301}
   serializedVersion: 2
-  m_Mass: 100
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 1
@@ -1877,9 +1877,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Health: 100
-  Damage: 25
-  rigidbodyH: {fileID: 0}
-  direction: {x: 0, y: 0, z: 0}
+  Damage: 20
 --- !u!1 &4812042948317349443
 GameObject:
   m_ObjectHideFlags: 0

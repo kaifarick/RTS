@@ -10,6 +10,7 @@ public class Units : MonoBehaviour
     public void GetDamage(int damage)
     {
         Health -= damage;
+        Dead();
     }
 
     public void Dead()

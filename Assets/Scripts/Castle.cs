@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class Castle : MonoBehaviour
@@ -13,6 +12,11 @@ public class Castle : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void RestartGames()
+    {
+        if (health <= 0) SceneManager.LoadScene("SampleScene");
     }
 
 }
