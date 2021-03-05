@@ -11,12 +11,17 @@ public class HammerFriend : Units
 
     HammerEnemy hammer;
 
+    int startHealth;
+    int startDamage;
     int range = 100;
     float timeBetweenAtack;
 
     LayerMask mask;
+
+
     void Start()
     {
+
         castle = GameObject.Find("MainCastle").transform;
         mask = LayerMask.GetMask("Enemy");
         hammer = GetComponent<HammerEnemy>();
@@ -24,8 +29,8 @@ public class HammerFriend : Units
 
     private void OnEnable()
     {
-        Health = 100 + UiManager.Instance.UpWarrior;
-        Damage = 100 + UiManager.Instance.UpWarrior;
+        Health = GameManager.Instance.units.Health + UiManager.Instance.UpWarrior; 
+        Damage = GameManager.Instance.units.Damage + UiManager.Instance.UpWarrior;
     }
 
     void Update()

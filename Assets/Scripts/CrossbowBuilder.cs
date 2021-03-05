@@ -8,7 +8,7 @@ public class CrossbowBuilder : MonoBehaviour
     int SpawnTime;
     void Start()
     {
-        Invoke("InvokeSpawn", 1f);
+        StartCoroutine(SpwanCrossbow());
     }
 
     IEnumerator SpwanCrossbow()

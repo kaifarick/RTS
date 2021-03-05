@@ -5,24 +5,17 @@ using UnityEngine;
 public class CrossbowEnemy : Units
 {
     private Transform playerPos;
-    private Transform castle;
 
-    CrossbowEnemy crossbowEnemy;
-    Castle castle1;
+    Castle castle;
 
     int range = 100;
     float timeBetweenAtack;
 
     LayerMask mask;
-
-    [SerializeField]
-    private float Speed;
     void Start()
     {
-        castle1 = FindObjectOfType<Castle>();
-        castle = GameObject.Find("MainCastle").transform;
+        castle = FindObjectOfType<Castle>();
         mask = LayerMask.GetMask("Player");
-        crossbowEnemy = GetComponent<CrossbowEnemy>();
     }
 
 
@@ -49,7 +42,7 @@ public class CrossbowEnemy : Units
 
             if (dist > 10f)
             {
-                transform.position = Vector3.MoveTowards(transform.position, playerPos.position, Speed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, playerPos.position, GameManager.Instance.units.MoveSpeed * Time.deltaTime);
             }
             else
             {
@@ -77,15 +70,16 @@ public class CrossbowEnemy : Units
             float currentDist = Vector3.Distance(gameObject.transform.position, castle.transform.position);
             if (currentDist > 10f)
             {
-                transform.position = Vector3.MoveTowards(transform.position, castle.position, Speed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, castle.transform.position, GameManager.Instance.units.MoveSpeed * Time.deltaTime);
             }
 
             else
             {
                 if (timeBetweenAtack <= 0)
                 {
-                    castle1.health -= Damage;
-                    castle1.RestartGames();
+                    castle.health -= Damage;
+                    UiManager.Instance.CastleHealthTXT.text = "Castle" + castle.health.ToString();
+                    castle.RestartGames();
                     timeBetweenAtack = 2f;
                 }
                 else timeBetweenAtack -= Time.deltaTime;

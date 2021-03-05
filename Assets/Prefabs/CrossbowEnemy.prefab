@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3262809214409805654}
   m_Layer: 9
   m_Name: CrossbowEnemy
-  m_TagString: Crossbow
+  m_TagString: CrossbowEnemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -76,9 +76,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9142ee3c104b00f479a0e447e82d2473, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 100
-  Damage: 10
-  Speed: 5
+  Health: 0
+  Damage: 0
+  MoveSpeed: 0
 --- !u!1 &5890843645431543662
 GameObject:
   m_ObjectHideFlags: 0

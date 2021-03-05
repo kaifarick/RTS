@@ -14,9 +14,6 @@ public class CrossbowFriendly : Units
     float timeBetweenAtack;
 
     LayerMask mask;
-
-    [SerializeField]
-    private float Speed;
     void Start()
     {
         castle = GameObject.Find("MainCastle").transform;
@@ -26,8 +23,8 @@ public class CrossbowFriendly : Units
 
     private void OnEnable()
     {
-        Health = 100 + UiManager.Instance.UpWarrior;
-        Damage = 100 + UiManager.Instance.UpWarrior;
+        Health = GameManager.Instance.units.Health + UiManager.Instance.UpWarrior;
+        Damage = GameManager.Instance.units.Damage + UiManager.Instance.UpWarrior;
     }
 
 

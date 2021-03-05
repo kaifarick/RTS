@@ -5,7 +5,7 @@ using UnityEngine;
 public class HammerEnemy : Units
 {
     private Transform playerPos;
-    private Transform castle;
+    Castle castle;
 
     HammerEnemy hammer;
 
@@ -13,12 +13,9 @@ public class HammerEnemy : Units
     float timeBetweenAtack;
 
     LayerMask mask;
-
-    [SerializeField]
-    private float Speed;
     void Start()
     {
-        castle = GameObject.Find("MainCastle").transform;
+        castle = FindObjectOfType<Castle>();
         mask = LayerMask.GetMask("Player");
         hammer = GetComponent<HammerEnemy>();
     }
@@ -47,7 +44,7 @@ public class HammerEnemy : Units
 
             if (dist > 1.6f)
             {
-                transform.position = Vector3.MoveTowards(transform.position, playerPos.position, Speed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, playerPos.position, GameManager.Instance.units.MoveSpeed * Time.deltaTime);
             }
             else
             {
@@ -73,7 +70,7 @@ public class HammerEnemy : Units
             float currentDist = Vector3.Distance(gameObject.transform.position, castle.transform.position);
             if (currentDist > 3.5f)
             {
-                transform.position = Vector3.MoveTowards(transform.position, castle.position, Speed * Time.deltaTime); ;
+                transform.position = Vector3.MoveTowards(transform.position, castle.transform.position, GameManager.Instance.units.MoveSpeed * Time.deltaTime); ;
             }
         }
     }

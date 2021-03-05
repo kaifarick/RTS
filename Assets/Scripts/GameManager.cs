@@ -5,8 +5,6 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
     [SerializeField]
-    int friendMoveSpeed;
-    [SerializeField]
     int hammerCost;
     [SerializeField]
     int crossbowCost;
@@ -16,10 +14,16 @@ public class GameManager : Singleton<GameManager>
     int moneyFromWave;
     [SerializeField]
     int timeSpawn;
+    [SerializeField]
+    int healthUpEnemy;
+    [SerializeField]
+    int damageUpEnemy;
+
+    public Units units;
 
     [SerializeField]
     private GameObject dot;
-    private GameObject unit;
+    private GameObject selectedUnit;
     private Transform target;
 
     void Start()
@@ -36,35 +40,33 @@ public class GameManager : Singleton<GameManager>
 
     IEnumerator SpawnEnemy()
     { 
-        int healthUp = 5;
-        int damageUp = 5;
-
+        
         while (true)
         {
             for (int i = 0; i < callWarriors; i++)
             {
-                GameObject Enemy = PoolManager.Instance.GetPooledObject("Hammer");
-                Enemy.GetComponent<HammerEnemy>().Health = 100;
-                Enemy.GetComponent<HammerEnemy>().Damage = 25;
+                GameObject Enemy = PoolManager.Instance.GetPooledObject("HammerEnemy");
+                Enemy.GetComponent<HammerEnemy>().Health = units.Health;
+                Enemy.GetComponent<HammerEnemy>().Damage = units.Damage;
                 Enemy.SetActive(true);
-                Enemy.GetComponent<HammerEnemy>().Health += healthUp;
-                Enemy.GetComponent<HammerEnemy>().Damage += damageUp;
+                Enemy.GetComponent<HammerEnemy>().Health += healthUpEnemy;
+                Enemy.GetComponent<HammerEnemy>().Damage += damageUpEnemy;
 
             }
 
             for (int i = 0; i < callWarriors; i++)
             {
-                GameObject Enemy = PoolManager.Instance.GetPooledObject("Crossbow");
-                Enemy.GetComponent<CrossbowEnemy>().Health = 100;
-                Enemy.GetComponent<CrossbowEnemy>().Damage = 25;
+                GameObject Enemy = PoolManager.Instance.GetPooledObject("CrossbowEnemy");
+                Enemy.GetComponent<CrossbowEnemy>().Health = units.Health;
+                Enemy.GetComponent<CrossbowEnemy>().Damage = units.Damage;
                 Enemy.SetActive(true);
-                Enemy.GetComponent<CrossbowEnemy>().Health += healthUp;
-                Enemy.GetComponent<CrossbowEnemy>().Damage += damageUp;
+                Enemy.GetComponent<CrossbowEnemy>().Health += healthUpEnemy;
+                Enemy.GetComponent<CrossbowEnemy>().Damage += damageUpEnemy;
 
             }
+            healthUpEnemy += healthUpEnemy;
+            damageUpEnemy += damageUpEnemy;
             callWarriors += 2;
-            healthUp += 5;
-            damageUp += 5;
             UiManager.Instance.AddMoney(moneyFromWave);
             yield return new WaitForSeconds(timeSpawn);
         }
@@ -100,10 +102,10 @@ public class GameManager : Singleton<GameManager>
 
             if (warrior)
             {
-                unit = warrior.gameObject;
+                selectedUnit = warrior.gameObject;
 
-                UiManager.Instance.UnitHealth = unit.GetComponent<HammerFriend>().Health;
-                UiManager.Instance.UnitDamage = unit.GetComponent<HammerFriend>().Damage;
+                UiManager.Instance.UnitHealth = selectedUnit.GetComponent<HammerFriend>().Health;
+                UiManager.Instance.UnitDamage = selectedUnit.GetComponent<HammerFriend>().Damage;
 
                 UiManager.Instance.UnitUi.SetActive(true);
                 UiManager.Instance.UnitUiRefresh();
@@ -111,17 +113,12 @@ public class GameManager : Singleton<GameManager>
 
             else if (crossbowFriendly)
             {
-                unit = crossbowFriendly.gameObject;
-                try
-                {
-                    UiManager.Instance.UnitHealth = unit.GetComponent<HammerFriend>().Health;
-                    UiManager.Instance.UnitDamage = unit.GetComponent<HammerFriend>().Damage;
-                }
-                catch
-                {
-                    UiManager.Instance.UnitHealth = unit.GetComponent<CrossbowFriendly>().Health;
-                    UiManager.Instance.UnitDamage = unit.GetComponent<CrossbowFriendly>().Damage;
-                }
+                selectedUnit = crossbowFriendly.gameObject;
+
+
+                    UiManager.Instance.UnitHealth = selectedUnit.GetComponent<CrossbowFriendly>().Health;
+                    UiManager.Instance.UnitDamage = selectedUnit.GetComponent<CrossbowFriendly>().Damage;
+              
 
                 UiManager.Instance.UnitUi.SetActive(true);
                 UiManager.Instance.UnitUiRefresh();
@@ -132,7 +129,7 @@ public class GameManager : Singleton<GameManager>
 
                 if (UiManager.Instance.LeftMoney >= 0)
                 {
-                    GameObject friend = PoolManager.Instance.GetPooledObject("Player");
+                    GameObject friend = PoolManager.Instance.GetPooledObject("HammerFriendly");
                     friend.gameObject.transform.position = new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5));
                     friend.SetActive(true);
                     UiManager.Instance.UnitUi.SetActive(false);
@@ -153,7 +150,7 @@ public class GameManager : Singleton<GameManager>
             }
             else
             {
-                unit = null;
+                selectedUnit = null;
                 UiManager.Instance.UnitUi.SetActive(false);
             }
         }
@@ -161,9 +158,9 @@ public class GameManager : Singleton<GameManager>
 
     private void Move()
     {
-        if (unit == null) return;
-        unit.gameObject.transform.position = Vector3.MoveTowards(unit.gameObject.transform.position, target.position, friendMoveSpeed * Time.deltaTime);
-        unit.gameObject.transform.LookAt(target);
+        if (selectedUnit == null) return;
+        selectedUnit.gameObject.transform.position = Vector3.MoveTowards(selectedUnit.gameObject.transform.position, target.position, units.MoveSpeed * Time.deltaTime);
+        selectedUnit.gameObject.transform.LookAt(target);
     }
 
 }

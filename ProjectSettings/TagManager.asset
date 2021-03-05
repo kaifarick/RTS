@@ -4,9 +4,10 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Hammer
-  - Crossbow
   - CrossbowFriendly
+  - HammerEnemy
+  - CrossbowEnemy
+  - HammerFriendly
   layers:
   - Default
   - TransparentFX

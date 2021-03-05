@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Units : MonoBehaviour
 {
-    public int Health = 100;
-    public int Damage = 5;
+    public int Health;
+    public int Damage;
+    public int MoveSpeed;
 
     public void GetDamage(int damage)
     {

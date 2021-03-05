@@ -109,9 +109,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9893b2b946d951c418392db377c38e38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 100
-  Damage: 10
-  Speed: 0
+  Health: 0
+  Damage: 0
+  MoveSpeed: 0
 --- !u!1 &9063735958705177635
 GameObject:
   m_ObjectHideFlags: 0
@@ -152,7 +152,7 @@ PrefabInstance:
     - target: {fileID: -1146509846644557721, guid: 8745dcecb0eafec409964dd1f0b7bb67, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 4c57ae33a72fa6842bafed60410cd603, type: 2}
+      objectReference: {fileID: 2100000, guid: db745ec5b0155644c911480458a3f2ba, type: 2}
     - target: {fileID: -862664380799800753, guid: 8745dcecb0eafec409964dd1f0b7bb67, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 

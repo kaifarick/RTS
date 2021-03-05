@@ -10,17 +10,22 @@ public class UiManager : Singleton<UiManager>
 
     public Transform CrossbowArmTarget;
     public Transform HammerArmTarget;
+
+    public GameObject Fountain;
     public GameObject CrossbowArm;
     public GameObject HammerArm;
     public GameObject UnitUi;
 
     public Castle CastleObj;
-    public Units units;
 
-    public int UnitHealth;
-    public int UnitDamage;
     public int MoneyCount;
+    [HideInInspector]
+    public int UnitHealth;
+    [HideInInspector]
+    public int UnitDamage;
+    [HideInInspector]
     public int LeftMoney;
+    [HideInInspector]
     public int UpWarrior;
     void Start()
     {
@@ -103,7 +108,7 @@ public class UiManager : Singleton<UiManager>
         }
     }
 
-   public void UpWarriorBtn()
+    public void UpWarriorBtn()
     {
         LeftMoney = MoneyCount - 100;
         if (LeftMoney > 0)
@@ -111,6 +116,17 @@ public class UiManager : Singleton<UiManager>
             UpWarrior += 10;
             MoneyCount -= 100;
             MoneyTXT.text = "Money" + MoneyCount.ToString();
-        }                
+        }
+    }
+
+    public void BuildFountain()
+    {
+        LeftMoney = MoneyCount - 100;
+        if (LeftMoney > 0)
+        {
+            Instantiate(Fountain, new Vector3(2, 0, 20), Quaternion.identity);
+            MoneyCount -= 100;
+            MoneyTXT.text = "Money" + MoneyCount.ToString();
+        }
     }
 }

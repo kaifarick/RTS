@@ -438,7 +438,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 37673ecc6a14727438d03633d94dc1a8, type: 2}
+  - {fileID: 2100000, guid: db745ec5b0155644c911480458a3f2ba, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1814,7 +1814,7 @@ GameObject:
   - component: {fileID: -5413960196887761274}
   m_Layer: 8
   m_Name: HammerFriendly
-  m_TagString: Player
+  m_TagString: HammerFriendly
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1842,7 +1842,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4812042948221508301}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 80
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 1
@@ -1876,8 +1876,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1046200caafe82443a3c2750a645adea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 100
-  Damage: 20
+  Health: 0
+  Damage: 0
+  MoveSpeed: 0
 --- !u!1 &4812042948317349443
 GameObject:
   m_ObjectHideFlags: 0

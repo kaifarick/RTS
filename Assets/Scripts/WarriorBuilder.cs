@@ -16,7 +16,7 @@ public class WarriorBuilder : MonoBehaviour
     {
         while (true)
         {
-            GameObject unit = PoolManager.Instance.GetPooledObject("Player");
+            GameObject unit = PoolManager.Instance.GetPooledObject("HammerFriendly");
             unit.transform.position = new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5));
             unit.SetActive(true);
             yield return new WaitForSeconds(SpawnTime);
