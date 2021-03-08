@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class HammerEnemy : Units
 {
-    private Transform playerPos;
+    Transform playerPos;
     Castle castle;
 
-    HammerEnemy hammer;
+    public GameObject Marker;
 
     int range = 100;
     float timeBetweenAtack;
@@ -17,7 +17,6 @@ public class HammerEnemy : Units
     {
         castle = FindObjectOfType<Castle>();
         mask = LayerMask.GetMask("Player");
-        hammer = GetComponent<HammerEnemy>();
     }
 
 
@@ -42,7 +41,7 @@ public class HammerEnemy : Units
 
             playerPos = currentCollider.gameObject.transform;
 
-            if (dist > 1.6f)
+            if (dist > 1.7f)
             {
                 transform.position = Vector3.MoveTowards(transform.position, playerPos.position, GameManager.Instance.units.MoveSpeed * Time.deltaTime);
             }
@@ -54,11 +53,13 @@ public class HammerEnemy : Units
                     {
                         HammerFriend units = currentCollider.gameObject.GetComponent<HammerFriend>();
                         units.GetDamage(Damage);
+                        UiManager.Instance.UnitUiRefresh();
                     }
                     catch
                     {
                         CrossbowFriendly crossbow = currentCollider.gameObject.GetComponent<CrossbowFriendly>();
                         crossbow.GetDamage(Damage);
+                        UiManager.Instance.UnitUiRefresh();
                     }
                     timeBetweenAtack = 2f;
                 }
@@ -68,6 +69,7 @@ public class HammerEnemy : Units
         catch
         {
             float currentDist = Vector3.Distance(gameObject.transform.position, castle.transform.position);
+            Debug.Log(currentDist);
             if (currentDist > 3.5f)
             {
                 transform.position = Vector3.MoveTowards(transform.position, castle.transform.position, GameManager.Instance.units.MoveSpeed * Time.deltaTime); ;

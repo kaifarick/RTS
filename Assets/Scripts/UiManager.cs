@@ -18,10 +18,11 @@ public class UiManager : Singleton<UiManager>
 
     public Castle CastleObj;
 
+    public int hammerCost;
     public int MoneyCount;
-    [HideInInspector]
+    //[HideInInspector]
     public int UnitHealth;
-    [HideInInspector]
+    //[HideInInspector]
     public int UnitDamage;
     [HideInInspector]
     public int LeftMoney;
@@ -29,9 +30,14 @@ public class UiManager : Singleton<UiManager>
     public int UpWarrior;
     void Start()
     {
+      
         CastleObj = FindObjectOfType<Castle>();
-        MoneyCount -= 100;
         UiRefresh();
+    }
+
+    private void Update()
+    {
+        UnitUiRefresh();
     }
 
     public void AddMoney(int number)
@@ -60,13 +66,17 @@ public class UiManager : Singleton<UiManager>
         CastleHealthTXT.text = "Castle" + CastleObj.health.ToString();
     }
 
-    public void BuyWarrior(int number)
+    public void BuyWarrior()
     {
-        LeftMoney = MoneyCount - number;
+        LeftMoney = MoneyCount - hammerCost;
         if (LeftMoney >= 0)
         {
-            MoneyCount -= number;
+            MoneyCount -= hammerCost;
             MoneyTXT.text = "Money" + MoneyCount.ToString();
+
+            GameObject friend = PoolManager.Instance.GetPooledObject("HammerFriendly");
+            friend.gameObject.transform.position = new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5));
+            friend.SetActive(true);
         }
     }
 

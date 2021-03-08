@@ -5,20 +5,16 @@ using UnityEngine;
 public class CrossbowFriendly : Units
 
 {
-    private Transform playerPos;
-    private Transform castle;
-
-    CrossbowEnemy crossbowEnemy;
-
     int range = 100;
     float timeBetweenAtack;
 
+    public GameObject Marker;
+
     LayerMask mask;
+
     void Start()
     {
-        castle = GameObject.Find("MainCastle").transform;
         mask = LayerMask.GetMask("Enemy");
-        crossbowEnemy = GetComponent<CrossbowEnemy>();
     }
 
     private void OnEnable()
@@ -46,8 +42,6 @@ public class CrossbowFriendly : Units
                     dist = currentDist;
                 }
             }
-
-            playerPos = currentCollider.gameObject.transform;
 
             if (dist < 10f)
             {

@@ -19,11 +19,7 @@ public class CrossbowBuilder : MonoBehaviour
             unit.transform.position = new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5));
             unit.SetActive(true);
             yield return new WaitForSeconds(SpawnTime);
+            GameManager.Instance.AllFriendUnits.Add(unit);
         }
-    }
-
-    void InvokeSpawn()
-    {
-        StartCoroutine(SpwanCrossbow());
     }
 }

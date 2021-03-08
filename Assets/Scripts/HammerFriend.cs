@@ -5,26 +5,17 @@ using UnityEngine;
 public class HammerFriend : Units
 
 {
-    private Transform playerPos;
-    private Transform castle;
+    Transform playerPos;
+    public GameObject Marker;
 
-
-    HammerEnemy hammer;
-
-    int startHealth;
-    int startDamage;
     int range = 100;
     float timeBetweenAtack;
 
     LayerMask mask;
 
-
     void Start()
     {
-
-        castle = GameObject.Find("MainCastle").transform;
         mask = LayerMask.GetMask("Enemy");
-        hammer = GetComponent<HammerEnemy>();
     }
 
     private void OnEnable()
@@ -51,8 +42,6 @@ public class HammerFriend : Units
                     dist = currentDist;
                 }
             }
-
-            playerPos = currentCollider.gameObject.transform;
 
             if (dist < 1.6f)
             {

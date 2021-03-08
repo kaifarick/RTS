@@ -5,6 +5,7 @@ using UnityEngine;
 public class CrossbowEnemy : Units
 {
     private Transform playerPos;
+    public GameObject Marker;
 
     Castle castle;
 
