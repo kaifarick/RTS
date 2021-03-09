@@ -140,6 +140,7 @@ GameObject:
   - component: {fileID: 214420428752157945}
   - component: {fileID: 214420428752157946}
   - component: {fileID: 5141791379060967044}
+  - component: {fileID: 8121581501327136110}
   m_Layer: 8
   m_Name: CrossbowFriendly
   m_TagString: CrossbowFriendly
@@ -209,6 +210,18 @@ MonoBehaviour:
   Damage: 0
   MoveSpeed: 0
   Marker: {fileID: 5210176560713343}
+--- !u!122 &8121581501327136110
+Halo:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7302242683570380775}
+  m_Enabled: 0
+  m_Color:
+    serializedVersion: 2
+    rgba: 4286611584
+  m_Size: 2.5
 --- !u!1 &9063735958705177635
 GameObject:
   m_ObjectHideFlags: 0

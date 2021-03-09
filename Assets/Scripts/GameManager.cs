@@ -8,8 +8,7 @@ public class GameManager : Singleton<GameManager>
     int StartFriendSpawn;
     [SerializeField]
     int callEnemyWarriors;
-    [SerializeField]
-    int moneyFromWave;
+    public  int moneyFromWave;
     [SerializeField]
     int timeSpawn;
     [SerializeField]
@@ -63,7 +62,7 @@ public class GameManager : Singleton<GameManager>
             AllFriendUnits.Add(friend);
         }
     }
-            IEnumerator SpawnEnemy()
+    IEnumerator SpawnEnemy()
     { 
         
         while (true)
@@ -117,6 +116,13 @@ public class GameManager : Singleton<GameManager>
             Destroy(target.gameObject);
         }
 
+        Behaviour halo;
+        if (uiUnit != null)
+        {
+            halo = (Behaviour)uiUnit.GetComponent("Halo");
+            halo.enabled = false;
+        }
+
         RaycastHit hit;
 
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
@@ -130,7 +136,8 @@ public class GameManager : Singleton<GameManager>
             {
                 selectedUnit = hammerFriend.gameObject;
                 uiUnit = hammerFriend.gameObject;
-                uiUnit.GetComponent<HammerFriend>().Marker.SetActive(true);
+                halo = (Behaviour)uiUnit.GetComponent("Halo");
+                halo.enabled = true;
 
                 UiManager.Instance.UnitHealth = uiUnit.GetComponent<HammerFriend>().Health;
                 UiManager.Instance.UnitDamage = uiUnit.GetComponent<HammerFriend>().Damage;
@@ -143,7 +150,8 @@ public class GameManager : Singleton<GameManager>
             {
                 selectedUnit = crossbowFriendly.gameObject;
                 uiUnit = crossbowFriendly.gameObject;
-                uiUnit.GetComponent<CrossbowFriendly>().Marker.SetActive(true);
+                halo = (Behaviour)uiUnit.GetComponent("Halo");
+                halo.enabled = true;
 
                 UiManager.Instance.UnitHealth = uiUnit.GetComponent<CrossbowFriendly>().Health;
                 UiManager.Instance.UnitDamage = uiUnit.GetComponent<CrossbowFriendly>().Damage;
@@ -155,7 +163,8 @@ public class GameManager : Singleton<GameManager>
             else if (hammerEnemy)
             {
                 uiUnit = hammerEnemy.gameObject;
-                uiUnit.GetComponent<HammerEnemy>().Marker.SetActive(true);
+                halo = (Behaviour)uiUnit.GetComponent("Halo");
+                halo.enabled = true;
 
                 UiManager.Instance.UnitHealth = uiUnit.GetComponent<HammerEnemy>().Health;
                 UiManager.Instance.UnitDamage = uiUnit.GetComponent<HammerEnemy>().Damage;
@@ -167,7 +176,8 @@ public class GameManager : Singleton<GameManager>
             else if (crossbowEnemy)
             {
                 uiUnit = crossbowEnemy.gameObject;
-                uiUnit.GetComponent<CrossbowEnemy>().Marker.SetActive(true);
+                halo = (Behaviour)uiUnit.GetComponent("Halo");
+                halo.enabled = true;
 
                 UiManager.Instance.UnitHealth = uiUnit.GetComponent<CrossbowEnemy>().Health;
                 UiManager.Instance.UnitDamage = uiUnit.GetComponent<CrossbowEnemy>().Damage;
@@ -178,22 +188,10 @@ public class GameManager : Singleton<GameManager>
 
             else
             {
-                switch (uiUnit.tag)
+                if (uiUnit != null) 
                 {
-                    case "HammerFriendly":
-                        uiUnit.GetComponent<HammerFriend>().Marker.SetActive(false);
-                        break;
-                    case "CrossbowFriendly":
-                        uiUnit.GetComponent<CrossbowFriendly>().Marker.SetActive(false);
-                        break;
-                    case "HammerEnemy":
-                        uiUnit.GetComponent<HammerEnemy>().Marker.SetActive(false);
-                        break;
-                    case "CrossbowEnemy":
-                        uiUnit.GetComponent<CrossbowEnemy>().Marker.SetActive(false);
-                        break;
-
-
+                    halo = (Behaviour)uiUnit.GetComponent("Halo");
+                    halo.enabled = false;
                 }
                 selectedUnit = null;
                 UiManager.Instance.UnitUi.SetActive(false);

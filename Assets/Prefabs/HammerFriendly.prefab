@@ -1907,6 +1907,7 @@ GameObject:
   - component: {fileID: 4812042948221508304}
   - component: {fileID: 4812042948221508303}
   - component: {fileID: -5413960196887761274}
+  - component: {fileID: 9121162111234735753}
   m_Layer: 8
   m_Name: HammerFriendly
   m_TagString: HammerFriendly
@@ -1976,6 +1977,18 @@ MonoBehaviour:
   Damage: 0
   MoveSpeed: 0
   Marker: {fileID: 1902844327303292502}
+--- !u!122 &9121162111234735753
+Halo:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4812042948221508301}
+  m_Enabled: 0
+  m_Color:
+    serializedVersion: 2
+    rgba: 4286611584
+  m_Size: 2.5
 --- !u!1 &4812042948317349443
 GameObject:
   m_ObjectHideFlags: 0

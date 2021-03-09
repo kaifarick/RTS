@@ -30,14 +30,9 @@ public class UiManager : Singleton<UiManager>
     public int UpWarrior;
     void Start()
     {
-      
+        MoneyCount -= GameManager.Instance.moneyFromWave;
         CastleObj = FindObjectOfType<Castle>();
         UiRefresh();
-    }
-
-    private void Update()
-    {
-        UnitUiRefresh();
     }
 
     public void AddMoney(int number)

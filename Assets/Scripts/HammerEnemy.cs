@@ -69,7 +69,6 @@ public class HammerEnemy : Units
         catch
         {
             float currentDist = Vector3.Distance(gameObject.transform.position, castle.transform.position);
-            Debug.Log(currentDist);
             if (currentDist > 3.5f)
             {
                 transform.position = Vector3.MoveTowards(transform.position, castle.transform.position, GameManager.Instance.units.MoveSpeed * Time.deltaTime); ;

@@ -107,6 +107,7 @@ GameObject:
   - component: {fileID: 3382598040493035444}
   - component: {fileID: 3382598040493035447}
   - component: {fileID: 3262809214409805654}
+  - component: {fileID: -7327309164412334198}
   m_Layer: 9
   m_Name: CrossbowEnemy
   m_TagString: CrossbowEnemy
@@ -176,6 +177,18 @@ MonoBehaviour:
   Damage: 0
   MoveSpeed: 0
   Marker: {fileID: 2596942352851930476}
+--- !u!122 &-7327309164412334198
+Halo:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5286777124159925418}
+  m_Enabled: 0
+  m_Color:
+    serializedVersion: 2
+    rgba: 4286611584
+  m_Size: 2.5
 --- !u!1 &5890843645431543662
 GameObject:
   m_ObjectHideFlags: 0

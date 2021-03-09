@@ -3093,7 +3093,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StartFriendSpawn: 5
-  callEnemyWarriors: 5
+  callEnemyWarriors: 2
   moneyFromWave: 100
   timeSpawn: 60
   healthUpEnemy: 10

@@ -67,30 +67,25 @@ public class GroupSelect : MonoBehaviour
 
     void FindSelect()
     {
-        foreach(GameObject unit in GameManager.Instance.AllFriendUnits)
+
+        foreach (GameObject unit in GameManager.Instance.AllFriendUnits)
         {
+            Behaviour halo;
+            if (unit != null)
+            {
+                halo = (Behaviour)unit.GetComponent("Halo");
+                halo.enabled = false;
+            }
             float x = unit.transform.position.x;
             float z = unit.transform.position.z;
             if(x>startPoint.x && x<endPoint.x || x<startPoint.x && x> endPoint.x)
             {
                 if(z>startPoint.z && z<endPoint.z || z < startPoint.z && z > endPoint.z)
                 {
-                    //GameManager.Instance.GroupSelected.Add(unit);
-                    //switch (unit.tag)
-                    //{
-                    //    case "HammerFriendly":
-                    //        unit.GetComponent<HammerFriend>().Marker.SetActive(true);
-                    //        break;
-                    //    case "CrossbowFriendly":
-                    //        unit.GetComponent<CrossbowFriendly>().Marker.SetActive(true);
-                    //        break;
-                    //    case "HammerEnemy":
-                    //        unit.GetComponent<HammerEnemy>().Marker.SetActive(true);
-                    //        break;
-                    //    case "CrossbowEnemy":
-                    //        unit.GetComponent<CrossbowEnemy>().Marker.SetActive(true);
-                    //        break;
-                   // }
+                    GameManager.Instance.GroupSelected.Add(unit);
+                    halo = (Behaviour)unit.GetComponent("Halo");
+                    halo.enabled = true;
+
                 }
             }
         }
