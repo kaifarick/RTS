@@ -1,22 +1,19 @@
 ﻿using System.Collections;
-using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class HammerEnemy : Units
 {
     Transform playerPos;
     Castle castle;
-
-    public GameObject Marker;
+    LayerMask mask;
 
     int range = 100;
     float timeBetweenAtack;
 
-    LayerMask mask;
-    void Start()
-    {
-        castle = FindObjectOfType<Castle>();
-        mask = LayerMask.GetMask("Player");
+    private void Start()
+    {    
+       castle = FindObjectOfType<Castle>();
+       mask = LayerMask.GetMask("Player");
     }
 
 
@@ -43,7 +40,7 @@ public class HammerEnemy : Units
 
             if (dist > 1.7f)
             {
-                transform.position = Vector3.MoveTowards(transform.position, playerPos.position, GameManager.Instance.units.MoveSpeed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, playerPos.position, MoveSpeed * Time.deltaTime);
             }
             else
             {
@@ -71,7 +68,7 @@ public class HammerEnemy : Units
             float currentDist = Vector3.Distance(gameObject.transform.position, castle.transform.position);
             if (currentDist > 3.5f)
             {
-                transform.position = Vector3.MoveTowards(transform.position, castle.transform.position, GameManager.Instance.units.MoveSpeed * Time.deltaTime); ;
+                transform.position = Vector3.MoveTowards(transform.position, castle.transform.position, MoveSpeed * Time.deltaTime); ;
             }
         }
     }
@@ -93,12 +90,11 @@ public class HammerEnemy : Units
     }
     private IEnumerator CastleDamage()
     {
-        Castle castle = FindObjectOfType<Castle>();
         while (true)
         {
             castle.health -= Damage;
-            UiManager.Instance.CastleHealthTXT.text = "Castle" + castle.health.ToString();
             castle.RestartGames();
+            UiManager.Instance.CastleTXTrefresh();
             yield return new WaitForSeconds(2);
         }
     }

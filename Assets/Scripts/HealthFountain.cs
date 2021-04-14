@@ -1,16 +1,19 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class HealthFountain : MonoBehaviour
+public class Fountain : MonoBehaviour
 {
+
+    int range = 30;
+
+    LayerMask mask;
+
     [SerializeField]
-    int healthDistance;
-    [SerializeField]
-    int healthUp;
+    int HealthUp;
     [SerializeField]
     int speedHealth;
 
-    LayerMask mask;
     Collider[] cols;
     void Start()
     {
@@ -18,20 +21,21 @@ public class HealthFountain : MonoBehaviour
         StartCoroutine(enumerator());
     }
 
+
     IEnumerator enumerator()
     {
         while (true)
         {
-            cols = Physics.OverlapSphere(transform.position, healthDistance, mask.value);
+            cols = Physics.OverlapSphere(transform.position, range, mask.value);
             for (int i = 0; i < cols.Length; i++)
             {
                 try
                 {
-                    cols[i].gameObject.GetComponent<HammerFriend>().Health += healthUp;
+                    cols[i].gameObject.GetComponent<HammerFriend>().Health += HealthUp;
                 }
                 catch
                 {
-                    cols[i].gameObject.GetComponent<CrossbowFriendly>().Health += healthUp;
+                    cols[i].gameObject.GetComponent<CrossbowFriendly>().Health += HealthUp;
                 }
             }
             yield return new WaitForSeconds(speedHealth);

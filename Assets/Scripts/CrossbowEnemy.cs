@@ -1,25 +1,20 @@
-﻿using System.Collections;
-using UnityEngine.SceneManagement;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CrossbowEnemy : Units
 {
     private Transform playerPos;
-    public GameObject Marker;
 
     Castle castle;
+    LayerMask mask;
 
     int range = 100;
     float timeBetweenAtack;
 
-    LayerMask mask;
     void Start()
     {
         castle = FindObjectOfType<Castle>();
         mask = LayerMask.GetMask("Player");
     }
-
-
     void Update()
     {
         var cols = Physics.OverlapSphere(transform.position, range, mask.value);
@@ -43,7 +38,7 @@ public class CrossbowEnemy : Units
 
             if (dist > 10f)
             {
-                transform.position = Vector3.MoveTowards(transform.position, playerPos.position, GameManager.Instance.units.MoveSpeed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, playerPos.position, MoveSpeed * Time.deltaTime);
             }
             else
             {
@@ -51,15 +46,13 @@ public class CrossbowEnemy : Units
                 {
                     try
                     {
-                        HammerFriend units = currentCollider.gameObject.GetComponent<HammerFriend>();
-                        units.GetDamage(Damage);
-                        UiManager.Instance.UnitUiRefresh();
+                        HammerFriend hammerFriend = currentCollider.gameObject.GetComponent<HammerFriend>();
+                        hammerFriend.GetDamage(Damage);
                     }
                     catch
                     {
-                        CrossbowFriendly crossbow = currentCollider.gameObject.GetComponent<CrossbowFriendly>();
-                        crossbow.GetDamage(Damage);
-                        UiManager.Instance.UnitUiRefresh();
+                        CrossbowFriendly crossbowFriendly = currentCollider.gameObject.GetComponent<CrossbowFriendly>();
+                        crossbowFriendly.GetDamage(Damage);
                     }
                     timeBetweenAtack = 2f;
                 }
@@ -71,7 +64,7 @@ public class CrossbowEnemy : Units
             float currentDist = Vector3.Distance(gameObject.transform.position, castle.transform.position);
             if (currentDist > 10f)
             {
-                transform.position = Vector3.MoveTowards(transform.position, castle.transform.position, GameManager.Instance.units.MoveSpeed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, castle.transform.position, MoveSpeed * Time.deltaTime);
             }
 
             else
@@ -79,7 +72,7 @@ public class CrossbowEnemy : Units
                 if (timeBetweenAtack <= 0)
                 {
                     castle.health -= Damage;
-                    UiManager.Instance.CastleHealthTXT.text = "Castle" + castle.health.ToString();
+                    UiManager.Instance.CastleTXTrefresh();
                     castle.RestartGames();
                     timeBetweenAtack = 2f;
                 }

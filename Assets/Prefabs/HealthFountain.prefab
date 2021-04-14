@@ -108,5 +108,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32171bff4412bba49844cd161afc6637, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HealthUp: 10
+  healthDistance: 30
+  healthUp: 10
   speedHealth: 5

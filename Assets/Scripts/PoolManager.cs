@@ -6,7 +6,7 @@ using UnityEngine;
 public  class ObjectPoolItem
 {
 
-    public int poolLenght = 10;
+    public int poolLenght;
     public bool shouldExpand = true;
 
     public GameObject objectToPool;
@@ -16,7 +16,7 @@ public  class ObjectPoolItem
 public  class PoolManager : Singleton<PoolManager>
 {
     public List<ObjectPoolItem> itemsToPool;
-    private List<GameObject> PooledObjects;
+    public List<GameObject> PooledObjects;
 
     void Start()
     {

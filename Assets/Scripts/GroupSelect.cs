@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GroupSelect : MonoBehaviour
 {
-    public bool isSelected;
+    private bool isSelected;
     private float selX;
     private float selY;
     private float selWidth;
@@ -13,7 +13,8 @@ public class GroupSelect : MonoBehaviour
     float selXold;
     float selYold;
 
-    public Texture2D texture;
+    [SerializeField]
+    private Texture2D texture;
 
     Vector3 startPoint;
     Vector3 endPoint;
@@ -35,6 +36,15 @@ public class GroupSelect : MonoBehaviour
         }
         if (Input.GetMouseButtonUp(0))
         {
+            foreach (GameObject unit in GameManager.Instance.GroupSelected)
+            {
+                Behaviour halo;
+                if (unit != null)
+                {
+                    halo = (Behaviour)unit.GetComponent("Halo");
+                    halo.enabled = false;
+                }
+            }
             GameManager.Instance.GroupSelected.Clear();
 
             isSelected = false;
@@ -64,18 +74,13 @@ public class GroupSelect : MonoBehaviour
             GUI.DrawTexture(new Rect(selX, selY, selWidth, selHeight), texture);
         }
     }
-
     void FindSelect()
     {
 
         foreach (GameObject unit in GameManager.Instance.AllFriendUnits)
         {
             Behaviour halo;
-            if (unit != null)
-            {
-                halo = (Behaviour)unit.GetComponent("Halo");
-                halo.enabled = false;
-            }
+
             float x = unit.transform.position.x;
             float z = unit.transform.position.z;
             if(x>startPoint.x && x<endPoint.x || x<startPoint.x && x> endPoint.x)

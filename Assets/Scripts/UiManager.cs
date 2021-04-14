@@ -3,34 +3,53 @@ using UnityEngine;
 
 public class UiManager : Singleton<UiManager>
 {
-    public Text UnitDamageTXT;
-    public Text UnitHealthTXT;
-    public Text MoneyTXT;
-    public Text CastleHealthTXT;
+    [SerializeField]
+    private Text UnitDamageTXT;
+    [SerializeField]
+    private Text UnitHealthTXT;
+    [SerializeField]
+    private Text MoneyTXT;
+    [SerializeField]
+    private Text CastleHealthTXT;
 
-    public Transform CrossbowArmTarget;
-    public Transform HammerArmTarget;
+    [SerializeField]
+    private Transform CrossbowArmTarget;
+    [SerializeField]
+    private Transform HammerArmTarget;
 
-    public GameObject Fountain;
-    public GameObject CrossbowArm;
-    public GameObject HammerArm;
-    public GameObject UnitUi;
+    [SerializeField]
+    private GameObject Fountain;
+    [SerializeField]
+    private GameObject CrossbowArm;
+    [SerializeField]
+    private GameObject HammerArm;
 
-    public Castle CastleObj;
+    [SerializeField]
+    private Castle CastleObj;
 
-    public int hammerCost;
-    public int MoneyCount;
-    //[HideInInspector]
+    [SerializeField]
+    private int hammerCost;
+    [SerializeField]
+    private int hammerBuildingCost;
+    [SerializeField]
+    private int crossbowBuildingCost;
+    [SerializeField]
+    private int HealthFountainCost;
+    [SerializeField]
+    private int UpgradeFriendWarriors;
+    [SerializeField]
+    private int MoneyCount;
+
+    [HideInInspector]
     public int UnitHealth;
-    //[HideInInspector]
+    [HideInInspector]
     public int UnitDamage;
     [HideInInspector]
-    public int LeftMoney;
-    [HideInInspector]
     public int UpWarrior;
+
+    private int LeftMoney;
     void Start()
     {
-        MoneyCount -= GameManager.Instance.moneyFromWave;
         CastleObj = FindObjectOfType<Castle>();
         UiRefresh();
     }
@@ -39,7 +58,6 @@ public class UiManager : Singleton<UiManager>
     {
         MoneyCount += number;
         MoneyTXT.text = "Money" + MoneyCount.ToString();
-
     }
 
     public void UnitUiRefresh()
@@ -77,8 +95,8 @@ public class UiManager : Singleton<UiManager>
 
     public void CreateHammerARMBtn()
     {
-        LeftMoney = MoneyCount - 100;
-        if (LeftMoney > 0)
+        LeftMoney = MoneyCount - hammerBuildingCost;
+        if (LeftMoney >= 0)
         {
             for (int i = 0; i < HammerArmTarget.childCount; i++)
             {
@@ -86,7 +104,8 @@ public class UiManager : Singleton<UiManager>
                 {
                     HammerArmTarget.GetChild(i).gameObject.SetActive(true);
                     Instantiate(HammerArm, HammerArmTarget.GetChild(i).gameObject.transform.position, Quaternion.identity);
-                    MoneyCount -= 100;
+
+                    MoneyCount -= hammerBuildingCost;
                     MoneyTXT.text = "Money" + MoneyCount.ToString();
                     return;
                 }
@@ -96,8 +115,8 @@ public class UiManager : Singleton<UiManager>
 
     public void CreateCrossbowARMBtn()
     {
-        LeftMoney = MoneyCount - 100;
-        if (LeftMoney > 0)
+        LeftMoney = MoneyCount - crossbowBuildingCost;
+        if (LeftMoney >= 0)
         {
             for (int i = 0; i < CrossbowArmTarget.childCount; i++)
             {
@@ -105,7 +124,8 @@ public class UiManager : Singleton<UiManager>
                 {
                     CrossbowArmTarget.GetChild(i).gameObject.SetActive(true);
                     Instantiate(CrossbowArm, CrossbowArmTarget.GetChild(i).gameObject.transform.position, Quaternion.identity);
-                    MoneyCount -= 100;
+
+                    MoneyCount -= crossbowBuildingCost;
                     MoneyTXT.text = "Money" + MoneyCount.ToString();
                     return;
                 }
@@ -115,22 +135,22 @@ public class UiManager : Singleton<UiManager>
 
     public void UpWarriorBtn()
     {
-        LeftMoney = MoneyCount - 100;
-        if (LeftMoney > 0)
+        LeftMoney = MoneyCount - UpgradeFriendWarriors;
+        if (LeftMoney >= 0)
         {
             UpWarrior += 10;
-            MoneyCount -= 100;
+            MoneyCount -= UpgradeFriendWarriors;
             MoneyTXT.text = "Money" + MoneyCount.ToString();
         }
     }
 
     public void BuildFountain()
     {
-        LeftMoney = MoneyCount - 100;
-        if (LeftMoney > 0)
+        LeftMoney = MoneyCount - HealthFountainCost;
+        if (LeftMoney >= 0)
         {
             Instantiate(Fountain, new Vector3(2, 0, 20), Quaternion.identity);
-            MoneyCount -= 100;
+            MoneyCount -= HealthFountainCost;
             MoneyTXT.text = "Money" + MoneyCount.ToString();
         }
     }

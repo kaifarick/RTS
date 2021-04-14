@@ -1,35 +1,47 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CrossbowFriendly : Units
-
 {
     int range = 100;
     float timeBetweenAtack;
 
-    public GameObject Marker;
-
     LayerMask mask;
-
-    void Start()
+    void Awake()
     {
+        StartParametrs();
         mask = LayerMask.GetMask("Enemy");
     }
 
     private void OnEnable()
     {
-        Health = GameManager.Instance.units.Health + UiManager.Instance.UpWarrior;
-        Damage = GameManager.Instance.units.Damage + UiManager.Instance.UpWarrior;
+        Health = StartHealth + UiManager.Instance.UpWarrior;
+        Damage = StartDamage + UiManager.Instance.UpWarrior;
     }
 
+    private void GroupMove()
+    {
+        if (GameManager.Instance.target)
+        {
+            foreach (GameObject gameObject in GameManager.Instance.GroupSelected)
+            {
+                if (gameObject == this.gameObject)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, GameManager.Instance.target.position, MoveSpeed * Time.deltaTime);
+                    transform.LookAt(GameManager.Instance.target);
+                }
+            }
+
+        }
+    }
 
     void Update()
     {
+        GroupMove();
+
         var cols = Physics.OverlapSphere(transform.position, range, mask.value);
         float dist = Mathf.Infinity;
 
-        try
+        if (cols.Length>0) 
         {
             Collider currentCollider = cols[0];
 
@@ -45,7 +57,6 @@ public class CrossbowFriendly : Units
 
             if (dist < 10f)
             {
-
                 if (timeBetweenAtack <= 0)
                 {
                     try
@@ -55,17 +66,13 @@ public class CrossbowFriendly : Units
                     }
                     catch
                     {
-                        CrossbowEnemy crossbow = currentCollider.gameObject.GetComponent<CrossbowEnemy>();
-                        crossbow.GetDamage(Damage);
+                        CrossbowEnemy units = currentCollider.gameObject.GetComponent<CrossbowEnemy>();
+                        units.GetDamage(Damage);
                     }
                     timeBetweenAtack = 2f;
                 }
                 else timeBetweenAtack -= Time.deltaTime;
             }
-        }
-        catch
-        {
-            return;
         }
     }
 }

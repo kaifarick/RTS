@@ -1,35 +1,56 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class HammerFriend : Units
 
 {
     Transform playerPos;
-    public GameObject Marker;
 
     int range = 100;
     float timeBetweenAtack;
 
     LayerMask mask;
+    CapsuleCollider capsuleCollider;
 
-    void Start()
+    void Awake()
     {
+        capsuleCollider = GetComponent<CapsuleCollider>();
+        StartParametrs();
         mask = LayerMask.GetMask("Enemy");
     }
 
     private void OnEnable()
     {
-        Health = GameManager.Instance.units.Health + UiManager.Instance.UpWarrior; 
-        Damage = GameManager.Instance.units.Damage + UiManager.Instance.UpWarrior;
+
+        Health = StartHealth + UiManager.Instance.UpWarrior; 
+        Damage = StartDamage + UiManager.Instance.UpWarrior;
+
+    }
+
+    private void GroupMove()
+    {
+        if (GameManager.Instance.target)
+        {
+            foreach (GameObject gameObject in GameManager.Instance.GroupSelected)
+            {
+                if (gameObject == this.gameObject)
+                {
+                    capsuleCollider.isTrigger = true;
+                    transform.position = Vector3.MoveTowards(transform.position, GameManager.Instance.target.position, MoveSpeed * Time.deltaTime);
+                    transform.LookAt(GameManager.Instance.target);
+                }
+            }
+        }
+        else capsuleCollider.isTrigger = false;
     }
 
     void Update()
     {
+        GroupMove();
+
         var cols = Physics.OverlapSphere(transform.position, range, mask.value);
         float dist = Mathf.Infinity;
 
-        try
+        if (cols.Length > 0)
         {
             Collider currentCollider = cols[0];
 
@@ -61,11 +82,6 @@ public class HammerFriend : Units
                 }
                 else timeBetweenAtack -= Time.deltaTime;
             }
-
-        }
-        catch
-        {
-            return;
-        }
+        }     
     }
 }

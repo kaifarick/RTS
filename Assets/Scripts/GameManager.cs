@@ -5,30 +5,30 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
     [SerializeField]
-    int StartFriendSpawn;
+    int startFriendSpawn;
     [SerializeField]
     int callEnemyWarriors;
-    public  int moneyFromWave;
     [SerializeField]
     int timeSpawn;
     [SerializeField]
     int healthUpEnemy;
     [SerializeField]
     int damageUpEnemy;
-
-    public Units units;
+    [SerializeField]
+    int moneyFromWave;
+    int moveSpeed;
 
     public List <GameObject> GroupSelected;
     public List <GameObject> AllFriendUnits;
 
-    [HideInInspector]
-    public GameObject uiUnit;
-    [HideInInspector]
-    public GameObject selectedUnit;
-    public GameObject MovePoint;
+    [SerializeField]
+    private GameObject MovePoint;
+    [SerializeField]
+    private GameObject UnitUi;
+    private GameObject unitFromUI;
+    private GameObject selectedUnit;
 
-    private Transform target;
-
+    public Transform target;
 
     void Start()
     {
@@ -38,23 +38,22 @@ public class GameManager : Singleton<GameManager>
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0)) SelectTarget();
-        if (Input.GetMouseButtonDown(1)) SetTarget();
-        Move();
+        if (Input.GetMouseButton(0)) SelectTarget();
+        if (Input.GetMouseButton(1)) SetTarget();
+        if (target) MoveSingle();
     }
 
     void FriendSpawn()
     {
-        for (int i = 0; i < StartFriendSpawn; i++)
+        for (int i = 0; i < startFriendSpawn; i++)
         {
             GameObject friend = PoolManager.Instance.GetPooledObject("HammerFriendly");
             friend.transform.position = new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5));
             friend.SetActive(true);
-            AllFriendUnits.Add(friend);
-            
+            AllFriendUnits.Add(friend);            
         }
 
-        for (int i = 0; i < StartFriendSpawn; i++)
+        for (int i = 0; i < startFriendSpawn; i++)
         {
             GameObject friend = PoolManager.Instance.GetPooledObject("CrossbowFriendly");
             friend.transform.position = new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5));
@@ -63,36 +62,48 @@ public class GameManager : Singleton<GameManager>
         }
     }
     IEnumerator SpawnEnemy()
-    { 
+    {
+        CrossbowEnemy StartCrossbowParameter = PoolManager.Instance.GetPooledObject("CrossbowEnemy").GetComponent<CrossbowEnemy>();
+        int crossbowHealth = StartCrossbowParameter.Health;
+        int crossbowDamage = StartCrossbowParameter.Damage;
+        HammerEnemy StartHammerParameter = PoolManager.Instance.GetPooledObject("HammerEnemy").GetComponent<HammerEnemy>();
+        int hammerHealth = StartHammerParameter.Health;
+        int hammerDamage = StartHammerParameter.Damage;
+
+        int healthUpEnemy = 0;
+        int damageUpEnemy = 0;
+        int moneyFromWave = 0;
         
         while (true)
         {
             for (int i = 0; i < callEnemyWarriors; i++)
             {
-                GameObject Enemy = PoolManager.Instance.GetPooledObject("HammerEnemy");
-                Enemy.GetComponent<HammerEnemy>().Health = units.Health;
-                Enemy.GetComponent<HammerEnemy>().Damage = units.Damage;
-                Enemy.SetActive(true);
-                Enemy.GetComponent<HammerEnemy>().Health += healthUpEnemy;
-                Enemy.GetComponent<HammerEnemy>().Damage += damageUpEnemy;
+                HammerEnemy Enemy = PoolManager.Instance.GetPooledObject("HammerEnemy").GetComponent<HammerEnemy>();
 
+                Enemy.Health = hammerHealth + healthUpEnemy;
+                Enemy.Damage = hammerDamage + damageUpEnemy;
+
+                Enemy.gameObject.SetActive(true);
             }
 
             for (int i = 0; i < callEnemyWarriors; i++)
             {
-                GameObject Enemy = PoolManager.Instance.GetPooledObject("CrossbowEnemy");
-                Enemy.GetComponent<CrossbowEnemy>().Health = units.Health;
-                Enemy.GetComponent<CrossbowEnemy>().Damage = units.Damage;
-                Enemy.SetActive(true);
-                Enemy.GetComponent<CrossbowEnemy>().Health += healthUpEnemy;
-                Enemy.GetComponent<CrossbowEnemy>().Damage += damageUpEnemy;
+                CrossbowEnemy Enemy = PoolManager.Instance.GetPooledObject("CrossbowEnemy").GetComponent<CrossbowEnemy>();
 
+                Enemy.Health = crossbowHealth + healthUpEnemy;
+                Enemy.Damage = crossbowDamage + damageUpEnemy;
+
+                Enemy.gameObject.SetActive(true);
             }
-            healthUpEnemy += healthUpEnemy;
-            damageUpEnemy += damageUpEnemy;
-            callEnemyWarriors += 2;
+
+            healthUpEnemy += this.healthUpEnemy;
+            damageUpEnemy += this.damageUpEnemy;
+            callEnemyWarriors += callEnemyWarriors;
+
             UiManager.Instance.AddMoney(moneyFromWave);
             yield return new WaitForSeconds(timeSpawn);
+
+            moneyFromWave = this.moneyFromWave;
         }
     }
 
@@ -117,15 +128,13 @@ public class GameManager : Singleton<GameManager>
         }
 
         Behaviour halo;
-        if (uiUnit != null)
+        if (unitFromUI != null)
         {
-            halo = (Behaviour)uiUnit.GetComponent("Halo");
+            halo = (Behaviour)unitFromUI.GetComponent("Halo");
             halo.enabled = false;
         }
 
-        RaycastHit hit;
-
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit))
         {
             HammerFriend hammerFriend = hit.collider.GetComponent<HammerFriend>();
             CrossbowFriendly crossbowFriendly = hit.collider.GetComponent<CrossbowFriendly>();
@@ -135,95 +144,78 @@ public class GameManager : Singleton<GameManager>
             if (hammerFriend)
             {
                 selectedUnit = hammerFriend.gameObject;
-                uiUnit = hammerFriend.gameObject;
-                halo = (Behaviour)uiUnit.GetComponent("Halo");
+                unitFromUI = hammerFriend.gameObject;
+                moveSpeed = hammerFriend.MoveSpeed;
+
+                halo = (Behaviour)unitFromUI.GetComponent("Halo");
                 halo.enabled = true;
 
-                UiManager.Instance.UnitHealth = uiUnit.GetComponent<HammerFriend>().Health;
-                UiManager.Instance.UnitDamage = uiUnit.GetComponent<HammerFriend>().Damage;
-
-                UiManager.Instance.UnitUi.SetActive(true);
+                UiManager.Instance.UnitHealth = unitFromUI.GetComponent<HammerFriend>().Health;
+                UiManager.Instance.UnitDamage = unitFromUI.GetComponent<HammerFriend>().Damage;
                 UiManager.Instance.UnitUiRefresh();
+
+                UnitUi.SetActive(true);
             }
 
             else if (crossbowFriendly)
             {
                 selectedUnit = crossbowFriendly.gameObject;
-                uiUnit = crossbowFriendly.gameObject;
-                halo = (Behaviour)uiUnit.GetComponent("Halo");
+                unitFromUI = crossbowFriendly.gameObject;
+                moveSpeed = crossbowFriendly.MoveSpeed;
+
+                halo = (Behaviour)unitFromUI.GetComponent("Halo");
                 halo.enabled = true;
 
-                UiManager.Instance.UnitHealth = uiUnit.GetComponent<CrossbowFriendly>().Health;
-                UiManager.Instance.UnitDamage = uiUnit.GetComponent<CrossbowFriendly>().Damage;
-
-                UiManager.Instance.UnitUi.SetActive(true);
+                UiManager.Instance.UnitHealth = unitFromUI.GetComponent<CrossbowFriendly>().Health;
+                UiManager.Instance.UnitDamage = unitFromUI.GetComponent<CrossbowFriendly>().Damage;
                 UiManager.Instance.UnitUiRefresh();
+
+                UnitUi.SetActive(true);
             }
 
             else if (hammerEnemy)
             {
-                uiUnit = hammerEnemy.gameObject;
-                halo = (Behaviour)uiUnit.GetComponent("Halo");
+                unitFromUI = hammerEnemy.gameObject;
+                halo = (Behaviour)unitFromUI.GetComponent("Halo");
                 halo.enabled = true;
 
-                UiManager.Instance.UnitHealth = uiUnit.GetComponent<HammerEnemy>().Health;
-                UiManager.Instance.UnitDamage = uiUnit.GetComponent<HammerEnemy>().Damage;
-
-                UiManager.Instance.UnitUi.SetActive(true);
+                UiManager.Instance.UnitHealth = unitFromUI.GetComponent<HammerEnemy>().Health;
+                UiManager.Instance.UnitDamage = unitFromUI.GetComponent<HammerEnemy>().Damage;
                 UiManager.Instance.UnitUiRefresh();
+
+                UnitUi.SetActive(true);
             }
 
             else if (crossbowEnemy)
             {
-                uiUnit = crossbowEnemy.gameObject;
-                halo = (Behaviour)uiUnit.GetComponent("Halo");
+                unitFromUI = crossbowEnemy.gameObject;
+                halo = (Behaviour)unitFromUI.GetComponent("Halo");
                 halo.enabled = true;
 
-                UiManager.Instance.UnitHealth = uiUnit.GetComponent<CrossbowEnemy>().Health;
-                UiManager.Instance.UnitDamage = uiUnit.GetComponent<CrossbowEnemy>().Damage;
-
-                UiManager.Instance.UnitUi.SetActive(true);
+                UiManager.Instance.UnitHealth = unitFromUI.GetComponent<CrossbowEnemy>().Health;
+                UiManager.Instance.UnitDamage = unitFromUI.GetComponent<CrossbowEnemy>().Damage;
                 UiManager.Instance.UnitUiRefresh();
+
+                UnitUi.SetActive(true);
             }
 
             else
             {
-                if (uiUnit != null) 
+                if (unitFromUI != null)
                 {
-                    halo = (Behaviour)uiUnit.GetComponent("Halo");
+                    halo = (Behaviour)unitFromUI.GetComponent("Halo");
                     halo.enabled = false;
                 }
                 selectedUnit = null;
-                UiManager.Instance.UnitUi.SetActive(false);
-                
+                UnitUi.SetActive(true);
             }
-        }
-    }
-
-    private void Move()
-    {
-        if (target)
-        {
-            MoveSingle();
-            MoveGroup();
         }
     }
 
     private void MoveSingle()
     {
         if (selectedUnit == null) return;
-        selectedUnit.gameObject.transform.position = Vector3.MoveTowards(selectedUnit.gameObject.transform.position, target.position, units.MoveSpeed * Time.deltaTime);
+        selectedUnit.gameObject.transform.position = Vector3.MoveTowards(selectedUnit.gameObject.transform.position, target.position, moveSpeed * Time.deltaTime);
         selectedUnit.gameObject.transform.LookAt(target);
-    }
-
-    void MoveGroup()
-    {
-        if (GroupSelected == null) return;
-        foreach (GameObject unit in GroupSelected)
-        {
-            unit.transform.position = Vector3.MoveTowards(unit.transform.position, target.position, units.MoveSpeed * Time.deltaTime);
-            unit.transform.LookAt(target);
-        }
-
     }
 }

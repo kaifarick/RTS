@@ -1174,10 +1174,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74036db60a0380e47aa3c7085345263e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 0
-  Damage: 0
-  MoveSpeed: 0
-  Marker: {fileID: 4639556953272287859}
+  Health: 100
+  Damage: 10
+  MoveSpeed: 5
 --- !u!122 &6382382688284179971
 Halo:
   m_ObjectHideFlags: 0
