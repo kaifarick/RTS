@@ -1883,6 +1883,9 @@ MonoBehaviour:
   - poolLenght: 10
     shouldExpand: 1
     objectToPool: {fileID: 7302242683570380775, guid: da409740a368a1649819ac09aff469aa, type: 3}
+  - poolLenght: 10
+    shouldExpand: 1
+    objectToPool: {fileID: 5815395804558424923, guid: cb07ff4263aaebb4ca0698a5517efe05, type: 3}
   PooledObjects: []
 --- !u!4 &348526493
 Transform:
@@ -3097,16 +3100,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startFriendSpawn: 5
-  callEnemyWarriors: 2
+  callEnemyWarriors: 1
   timeSpawn: 20
   healthUpEnemy: 10
   damageUpEnemy: 10
   moneyFromWave: 100
   GroupSelected: []
   AllFriendUnits: []
-  MovePoint: {fileID: 6493834261886156018, guid: 15e9bcebdfa5b3b4d9f556ee7696851e, type: 3}
+  MovePoint: {fileID: 496309466109206195, guid: 78cc378271e385a4d916bb7330dfd9d5, type: 3}
   UnitUi: {fileID: 146102612}
   target: {fileID: 0}
+  SetTargetEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &887604075
 Transform:
   m_ObjectHideFlags: 0
@@ -6878,9 +6896,9 @@ RectTransform:
   m_Father: {fileID: 2018015055}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.791, y: 0.08242926}
-  m_AnchorMax: {x: 0.791, y: 0.08242926}
-  m_AnchoredPosition: {x: -3, y: 11.899994}
+  m_AnchorMin: {x: 0.795, y: 0}
+  m_AnchorMax: {x: 0.795, y: 0}
+  m_AnchoredPosition: {x: -7, y: 51.899994}
   m_SizeDelta: {x: 135.75949, y: 109.777695}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1854689007

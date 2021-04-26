@@ -114,7 +114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b4d7d94ce217274f977777de505488d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpawnTime: 4
+  SpawnTime: 10
 --- !u!222 &4618491730049542946
 CanvasRenderer:
   m_ObjectHideFlags: 0

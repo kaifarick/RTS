@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GroupSelect : MonoBehaviour
 {
@@ -90,7 +88,6 @@ public class GroupSelect : MonoBehaviour
                     GameManager.Instance.GroupSelected.Add(unit);
                     halo = (Behaviour)unit.GetComponent("Halo");
                     halo.enabled = true;
-
                 }
             }
         }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -28,18 +29,22 @@ public class GameManager : Singleton<GameManager>
     private GameObject unitFromUI;
     private GameObject selectedUnit;
 
+    [HideInInspector]
     public Transform target;
+    [HideInInspector]
+    public UnityEvent SetTargetEvent;
 
     void Start()
     {
+        SetTargetEvent = new UnityEvent();
         FriendSpawn();
         StartCoroutine(SpawnEnemy());
     }
 
     private void Update()
     {
-        if (Input.GetMouseButton(0)) SelectTarget();
-        if (Input.GetMouseButton(1)) SetTarget();
+        if (Input.GetMouseButtonDown(0)) SelectTarget();
+        if (Input.GetMouseButtonDown(1)) SetTarget();
         if (target) MoveSingle();
     }
 
@@ -50,7 +55,7 @@ public class GameManager : Singleton<GameManager>
             GameObject friend = PoolManager.Instance.GetPooledObject("HammerFriendly");
             friend.transform.position = new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5));
             friend.SetActive(true);
-            AllFriendUnits.Add(friend);            
+            AllFriendUnits.Add(friend);
         }
 
         for (int i = 0; i < startFriendSpawn; i++)
@@ -82,8 +87,9 @@ public class GameManager : Singleton<GameManager>
 
                 Enemy.Health = hammerHealth + healthUpEnemy;
                 Enemy.Damage = hammerDamage + damageUpEnemy;
+                Enemy.transform.position =  new Vector3(Random.Range(-20, 20), 0, Random.Range(30, 70));
 
-                Enemy.gameObject.SetActive(true);
+            Enemy.gameObject.SetActive(true);
             }
 
             for (int i = 0; i < callEnemyWarriors; i++)
@@ -92,6 +98,7 @@ public class GameManager : Singleton<GameManager>
 
                 Enemy.Health = crossbowHealth + healthUpEnemy;
                 Enemy.Damage = crossbowDamage + damageUpEnemy;
+                Enemy.transform.position = new Vector3(Random.Range(-20, 20), 0, Random.Range(30, 70));
 
                 Enemy.gameObject.SetActive(true);
             }
@@ -115,8 +122,9 @@ public class GameManager : Singleton<GameManager>
         {
             if (target) Destroy(target.gameObject);
 
-            GameObject newTarget = Instantiate(MovePoint, hit.point, Quaternion.identity);
+            GameObject newTarget = Instantiate(MovePoint, hit.point, Quaternion.Euler(90,0,0));
             target = newTarget.transform;
+            SetTargetEvent.Invoke();
         }
     }
 
@@ -207,7 +215,7 @@ public class GameManager : Singleton<GameManager>
                     halo.enabled = false;
                 }
                 selectedUnit = null;
-                UnitUi.SetActive(true);
+                UnitUi.SetActive(false);
             }
         }
     }

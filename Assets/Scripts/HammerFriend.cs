@@ -3,85 +3,58 @@
 public class HammerFriend : Units
 
 {
-    Transform playerPos;
 
-    int range = 100;
-    float timeBetweenAtack;
-
-    LayerMask mask;
-    CapsuleCollider capsuleCollider;
+    Rigidbody rb;
 
     void Awake()
     {
-        capsuleCollider = GetComponent<CapsuleCollider>();
+        rb = GetComponent<Rigidbody>();
         StartParametrs();
-        mask = LayerMask.GetMask("Enemy");
+    }
+    void Start()
+    {
+        GameManager.Instance.SetTargetEvent.AddListener(TargetLogic);
     }
 
     private void OnEnable()
     {
 
-        Health = StartHealth + UiManager.Instance.UpWarrior; 
+        Health = StartHealth + UiManager.Instance.UpWarrior;
         Damage = StartDamage + UiManager.Instance.UpWarrior;
+    }
+
+    public void TargetLogic()
+    {
+        SaveTargetPosition();
 
     }
 
     private void GroupMove()
     {
-        if (GameManager.Instance.target)
+        if (TargetPosition != null)
         {
             foreach (GameObject gameObject in GameManager.Instance.GroupSelected)
             {
                 if (gameObject == this.gameObject)
                 {
-                    capsuleCollider.isTrigger = true;
-                    transform.position = Vector3.MoveTowards(transform.position, GameManager.Instance.target.position, MoveSpeed * Time.deltaTime);
-                    transform.LookAt(GameManager.Instance.target);
+                    rb.mass = 80f;
+                    transform.position = Vector3.MoveTowards(transform.position, TargetPosition.transform.position, MoveSpeed * Time.deltaTime);
+                    transform.LookAt(TargetPosition.transform);
                 }
             }
+            if (transform.position == TargetPosition.transform.position)
+            {
+
+                TargetPosition.gameObject.SetActive(false);
+                TargetPosition = null;
+                rb.mass = 10f;
+            }
         }
-        else capsuleCollider.isTrigger = false;
     }
 
     void Update()
     {
         GroupMove();
-
-        var cols = Physics.OverlapSphere(transform.position, range, mask.value);
-        float dist = Mathf.Infinity;
-
-        if (cols.Length > 0)
-        {
-            Collider currentCollider = cols[0];
-
-            foreach (Collider col in cols)
-            {
-                float currentDist = Vector3.Distance(transform.position, col.transform.position);
-                if (currentDist < dist)
-                {
-                    currentCollider = col;
-                    dist = currentDist;
-                }
-            }
-
-            if (dist < 1.6f)
-            {
-                if (timeBetweenAtack <= 0)
-                {
-                    try
-                    {
-                        HammerEnemy units = currentCollider.gameObject.GetComponent<HammerEnemy>();
-                        units.GetDamage(Damage);
-                    }
-                    catch
-                    {
-                        CrossbowEnemy crossbowEnemy = currentCollider.gameObject.GetComponent<CrossbowEnemy>();
-                        crossbowEnemy.GetDamage(Damage);
-                    }
-                    timeBetweenAtack = 2f;
-                }
-                else timeBetweenAtack -= Time.deltaTime;
-            }
-        }     
+        Attack(AttackDistance: 1.6f);
     }
 }

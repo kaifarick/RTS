@@ -8,6 +8,7 @@ TagManager:
   - HammerEnemy
   - CrossbowEnemy
   - HammerFriendly
+  - Target
   layers:
   - Default
   - TransparentFX
