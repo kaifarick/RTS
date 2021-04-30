@@ -51,7 +51,7 @@ public class CrossbowFriendly : Units
     void Update()
     {
         GroupMove();
-        Attack(AttackDistance:10f);
+        Attack(AttackDistance:10f, "Enemy");
     }
 }
 

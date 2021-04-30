@@ -3,9 +3,7 @@
 public class HammerFriend : Units
 
 {
-
     Rigidbody rb;
-
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -26,7 +24,6 @@ public class HammerFriend : Units
     public void TargetLogic()
     {
         SaveTargetPosition();
-
     }
 
     private void GroupMove()
@@ -55,6 +52,6 @@ public class HammerFriend : Units
     void Update()
     {
         GroupMove();
-        Attack(AttackDistance: 1.6f);
+        Attack(AttackDistance: 1.7f,"Enemy");
     }
 }

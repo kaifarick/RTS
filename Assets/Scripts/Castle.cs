@@ -3,10 +3,14 @@ using UnityEngine;
 
 public class Castle : MonoBehaviour
 {
-    public int health = 1000;
-    public void RestartGames()
+    private int health = 1000;
+    public int Health
     {
-        if (health <= 0) SceneManager.LoadScene("SampleScene");
+        get { return health; }
+        set
+        {
+            if (value <= 0) SceneManager.LoadScene("SampleScene");
+            health = value;
+        }
     }
-
 }

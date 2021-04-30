@@ -2,23 +2,18 @@
 
 public class CrossbowEnemy : Units
 {
-    private Transform playerPos;
-
+    Transform playerPos;
     Castle castle;
-    LayerMask mask;
-
-    int range = 100;
-    float timeBetweenAtack;
 
     void Start()
     {
         castle = FindObjectOfType<Castle>();
-        mask = LayerMask.GetMask("Player");
+        AttackParametrs(AttackDistance: 10f, "Player");
     }
     void Update()
     {
         var cols = Physics.OverlapSphere(transform.position, range, mask.value);
-        float dist = Mathf.Infinity;
+        float searchDistance = Mathf.Infinity;
 
         try
         {
@@ -27,16 +22,16 @@ public class CrossbowEnemy : Units
             foreach (Collider col in cols)
             {
                 float currentDist = Vector3.Distance(transform.position, col.transform.position);
-                if (currentDist < dist)
+                if (currentDist < searchDistance)
                 {
                     currentCollider = col;
-                    dist = currentDist;
+                    searchDistance = currentDist;
                 }
             }
 
             playerPos = currentCollider.gameObject.transform;
 
-            if (dist > 10f)
+            if (searchDistance > AttackDistance)
             {
                 transform.position = Vector3.MoveTowards(transform.position, playerPos.position, MoveSpeed * Time.deltaTime);
             }
@@ -62,7 +57,7 @@ public class CrossbowEnemy : Units
         catch
         {
             float currentDist = Vector3.Distance(gameObject.transform.position, castle.transform.position);
-            if (currentDist > 10f)
+            if (currentDist > AttackDistance)
             {
                 transform.position = Vector3.MoveTowards(transform.position, castle.transform.position, MoveSpeed * Time.deltaTime);
             }
@@ -71,9 +66,8 @@ public class CrossbowEnemy : Units
             {
                 if (timeBetweenAtack <= 0)
                 {
-                    castle.health -= Damage;
+                    castle.Health -= Damage;
                     UiManager.Instance.CastleTXTrefresh();
-                    castle.RestartGames();
                     timeBetweenAtack = 2f;
                 }
                 else timeBetweenAtack -= Time.deltaTime;

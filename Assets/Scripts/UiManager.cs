@@ -68,7 +68,7 @@ public class UiManager : Singleton<UiManager>
 
     public void UiRefresh()
     {
-        CastleHealthTXT.text = "Castle" + CastleObj.health.ToString();
+        CastleHealthTXT.text = "Castle" + CastleObj.Health.ToString();
         MoneyTXT.text = "Money" + MoneyCount.ToString();
         UnitDamageTXT.text = "Damage " + UnitDamage.ToString();
         UnitHealthTXT.text = "Health " + UnitHealth.ToString();
@@ -76,7 +76,7 @@ public class UiManager : Singleton<UiManager>
 
     public void CastleTXTrefresh()
     {
-        CastleHealthTXT.text = "Castle" + CastleObj.health.ToString();
+        CastleHealthTXT.text = "Castle" + CastleObj.Health.ToString();
     }
 
     public void BuyWarrior()

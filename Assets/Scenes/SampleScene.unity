@@ -3100,7 +3100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startFriendSpawn: 5
-  callEnemyWarriors: 1
+  callEnemyWarriors: 2
   timeSpawn: 20
   healthUpEnemy: 10
   damageUpEnemy: 10
@@ -4062,7 +4062,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e2194f670e49ee4b99a1b2251a8a8ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 1000
 --- !u!136 &1199718866
 CapsuleCollider:
   m_ObjectHideFlags: 0

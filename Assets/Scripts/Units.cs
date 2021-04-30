@@ -2,25 +2,24 @@
 
 public class Units : MonoBehaviour
 {
-    int range = 100;
-    float timeBetweenAtack;
-    LayerMask mask;
+    protected int range = 100;
+    protected float timeBetweenAtack;
+    protected float AttackDistance;
+
+    protected LayerMask mask;
+    protected GameObject TargetPosition;
 
     public int Health;
     public int Damage;
     public int MoveSpeed;
+    protected int StartHealth { get; private set; }
+    protected int StartDamage { get; private set; }
 
-    [HideInInspector]
-    public GameObject TargetPosition;
-    public int StartHealth { get; private set; }
-    public int StartDamage { get; private set; }
-
-    public void StartParametrs()
+    protected void StartParametrs()
     {
         StartDamage = Damage;
         StartHealth = Health;
     }
-
 
     public void GetDamage(int damage)
     {
@@ -28,11 +27,19 @@ public class Units : MonoBehaviour
         Dead();
     }
 
-    public void Attack(float AttackDistance)
+    protected void AttackParametrs(float AttackDistance, string layerMask)
     {
-        mask = LayerMask.GetMask("Enemy");
+        this.AttackDistance = AttackDistance;
+        mask = LayerMask.GetMask(layerMask);
+    }
+
+
+
+    protected virtual void Attack(float AttackDistance, string layerMask)
+    {
+        mask = LayerMask.GetMask(layerMask);
         var cols = Physics.OverlapSphere(transform.position, range, mask.value);
-        float dist = Mathf.Infinity;
+        float searchDistance = Mathf.Infinity;
 
         if (cols.Length > 0)
         {
@@ -41,14 +48,14 @@ public class Units : MonoBehaviour
             foreach (Collider col in cols)
             {
                 float currentDist = Vector3.Distance(transform.position, col.transform.position);
-                if (currentDist < dist)
+                if (currentDist < searchDistance)
                 {
                     currentCollider = col;
-                    dist = currentDist;
+                    searchDistance = currentDist;
                 }
             }
 
-            if (dist < AttackDistance)
+            if (searchDistance < AttackDistance)
             {
                 if (timeBetweenAtack <= 0)
                 {
@@ -69,7 +76,7 @@ public class Units : MonoBehaviour
         }
     }
 
-    public void SaveTargetPosition()
+    protected void SaveTargetPosition()
     {
         float random = Random.Range(-2f, 2f);
         Vector3 vector3 = new Vector3(GameManager.Instance.target.transform.position.x + random, GameManager.Instance.target.transform.position.y, GameManager.Instance.target.transform.position.z + random);
@@ -78,7 +85,7 @@ public class Units : MonoBehaviour
         TargetPosition.SetActive(true);
         TargetPosition.transform.position = vector3;
     }
-    public void Dead()
+    void Dead()
     {
         if(Health <= 0) gameObject.SetActive(false);
     }
